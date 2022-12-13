@@ -126,21 +126,34 @@
           </div>
         </div>
         <div class="row justify-content-center">
-          <div class="col-md-6">
-            <form>
+          <div class="col-md-6"> 
+
+            <!-- alert -->
+            <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+              <strong>Thank you!</strong>  Your message has been sent
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <!-- end alert -->
+
+            <form name="RamsWeb-Contact-Form">
               <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" aria-describedby="name">
+                <input type="text" class="form-control" id="name" aria-describedby="name" name="name">
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="email">
+                <input type="email" class="form-control" id="email" aria-describedby="email" name="email">
               </div>
               <div class="mb-3">
                 <label for="comment" class="comment">Comment</label>
-                <textarea class="form-control" id="comment" rows="3"></textarea>
+                <textarea class="form-control" id="comment" rows="3" name="comment"></textarea>
               </div>
-              <button type="submit" class="btn btn-success">Submit</button>
+              <button type="submit" class="btn btn-success btn-send">Submit</button>
+
+              <button class="btn btn-success btn-loading d-none" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
             </form>
           </div>
         </div>
@@ -155,5 +168,37 @@
     </footer>
     <!-- end footer -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script>
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbykj5dhkD2tXbba1YOShxyr_hx9V_PkQpqGbUrvh867egkP-XcTKtdOqlaquMTQpSM/exec'
+      const form = document.forms['RamsWeb-Contact-Form'] 
+
+      const btnSend = document.querySelector('.btn-send')
+      const btnLoad = document.querySelector('.btn-loading')
+      const alertS = document.querySelector('.my-alert')
+
+
+    
+      form.addEventListener('submit', e => {
+        e.preventDefault()
+        // ketika submit click //
+        //tampilkan loading hilangkan kirim //
+        btnLoad.classList.toggle('d-none')
+        btnSend.classList.toggle('d-none')
+        
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+          .then(response => {
+            btnLoad.classList.toggle('d-none')
+            btnSend.classList.toggle('d-none')
+            // alert //
+            alertS.classList.toggle('d-none')
+            // reset form //
+            form.reset()
+            console.log('Success!', response)
+          })
+          .catch(error => console.error('Error!', error.message))
+      })
+    </script>
+  
   </body>
 </html>
